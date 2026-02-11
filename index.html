@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Magis Ramadan - Luminous Night</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* --- CSS: THEME & ANIMATION --- */
+        :root {
+            --bg-night: linear-gradient(180deg, #0b132b 0%, #1c2541 50%, #3a506b 100%);
+            --glow-blue: #64ffda;
+            --glass: rgba(255, 255, 255, 0.1);
+            --text-gold: #f0e68c;
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+
+        body {
+            background: var(--bg-night);
+            background-attachment: fixed;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- GLOWING MOON --- */
+        .moon {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            width: 100px;
+            height: 100px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 30px 10px rgba(255, 255, 255, 0.3), 0 0 80px 20px rgba(135, 206, 235, 0.2);
+            z-index: -1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-15px) scale(1.05); }
+        }
+
+        /* --- CONTAINER & LAYOUT --- */
+        .container { 
+            width: 90%;
+            max-width: 1000px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            text-align: center; 
+        }
+
+        header { padding: 40px 0; }
+        .logo-sekolah { 
+            width: 120px; 
+            height: 120px; 
+            object-fit: contain;
+            margin-bottom: 15px; 
+            filter: drop-shadow(0 0 15px var(--glow-blue)); 
+        }
+
+        h1 { font-size: 2.2rem; margin-bottom: 5px; text-shadow: 0 0 10px rgba(100, 255, 218, 0.5); }
+        .tagline { color: var(--text-gold); font-weight: 300; font-size: 1.1rem; }
+
+        /* --- CARD STYLING (GLASSMORPHISM) --- */
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .card h3 { margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--glow-blue); }
+
+        /* --- VIDEO RESPONSIVE --- */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 16px;
+            border: 1px solid var(--glow-blue);
+        }
+        .video-wrapper iframe {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        }
+
+        /* --- BUTTONS & SELECTIONS --- */
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        select, .btn {
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            outline: none;
+        }
+
+        select { background: white; color: #333; }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-sheet { background: #2e7d32; color: white; }
+        .btn-canva { background: #7d2ae8; color: white; grid-column: span 2; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(100, 255, 218, 0.4); }
+
+        /* --- ADMIN PANEL MODAL --- */
+        .overlay { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.85); z-index: 999; backdrop-filter: blur(5px);
+        }
+        #admin-panel {
+            display: none; position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 95%; max-width: 500px;
+            background: #121212; border: 1px solid var(--glow-blue);
+            z-index: 1000; padding: 25px; border-radius: 20px;
+            max-height: 90vh; overflow-y: auto;
+        }
+        .admin-form label { display: block; margin-top: 12px; font-size: 0.85rem; color: #aaa; text-align: left; }
+        .admin-form input { 
+            width: 100%; padding: 12px; margin-top: 5px; border-radius: 8px; 
+            border: 1px solid #333; background: #222; color: white; 
+        }
+
+        /* --- FOOTER --- */
+        footer { margin-top: 40px; padding: 40px 20px; border-top: 1px solid var(--glass); opacity: 0.9; }
+        .social-icons { margin: 15px 0; font-size: 1.5rem; display: flex; justify-content: center; gap: 20px; }
+        .social-icons i { cursor: pointer; transition: 0.3s; }
+        .social-icons i:hover { color: var(--glow-blue); }
+
+        /* --- MEDIA QUERIES (RESPONSIF) --- */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.6rem; }
+            .moon { width: 70px; height: 70px; top: 20px; right: 20px; }
+            .action-grid { grid-template-columns: 1fr; }
+            .btn-canva { grid-column: span 1; }
+            .card { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="moon"></div>
+
+    <div class="container">
+        <header>
+            <img id="display-logo" src="https://cdn-icons-png.flaticon.com/512/2602/2602414.png" alt="Logo Sekolah" class="logo-sekolah">
+            <h1 id="display-judul">Portal Digital Ramadan</h1>
+            <p id="display-tagline" class="tagline">Membangun Karakter di Bulan Suci</p>
+        </header>
+
+        <section class="card">
+            <h3><i class="fas fa-quote-left"></i> Sambutan Kepala Sekolah</h3>
+            <p id="display-sambutan">"Selamat menjalankan ibadah Ramadan. Manfaatkan portal ini untuk memantau progres ibadah dan pembelajaran ananda dengan lebih mudah dan menyenangkan."</p>
+        </section>
+
+        <section class="card">
+            <h3><i class="fas fa-play-circle"></i> Tutorial Penggunaan APP</h3>
+            <div class="video-wrapper">
+                <iframe id="display-video" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </section>
+
+        <section class="card">
+            <h3><i class="fas fa-door-open"></i> Pintu Masuk Siswa & Ortu</h3>
+            <div class="action-grid">
+                <select id="pilih-kelas">
+                    <option value="">-- Pilih Kelas --</option>
+                    <option value="Kelas 1">Kelas 1</option>
+                    <option value="Kelas 2">Kelas 2</option>
+                    <option value="Kelas 3">Kelas 3</option>
+                    <option value="Kelas 4">Kelas 4</option>
+                    <option value="Kelas 5">Kelas 5</option>
+                    <option value="Kelas 6">Kelas 6</option>
+                </select>
+                <button onclick="bukaSheet()" class="btn btn-sheet">
+                    <i class="fas fa-file-invoice"></i> Cek Data Siswa
+                </button>
+                <a id="display-canva" href="#" target="_blank" class="btn btn-canva">
+                    <i class="fas fa-star"></i> Buka E-Jurnal Ramadan (Canva)
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <strong id="foot-nama">Nama Sekolah Anda</strong><br>
+            <span id="foot-alamat">Jl. Pendidikan No. 123, Kota Digital</span>
+            <div class="social-icons">
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-facebook"></i>
+                <i class="fab fa-youtube"></i>
+                <i class="fab fa-whatsapp"></i>
+            </div>
+            <p style="font-size: 0.7rem; color: #666; margin-top: 20px;">© 2026 Portal Ramadan - Managed by Admin</p>
+            <button onclick="authAdmin()" style="background:none; border:none; color:#444; margin-top:10px; cursor:pointer;">Admin Portal</button>
+        </footer>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div id="admin-panel">
+        <h2 style="color: var(--glow-blue); text-align: center;"><i class="fas fa-tools"></i> Pengaturan</h2>
+        <div class="admin-form">
+            <label>Nama Sekolah</label>
+            <input type="text" id="edit-nama">
+            
+            <label>Tagline</label>
+            <input type="text" id="edit-tagline">
+
+            <label>Sambutan Singkat</label>
+            <input type="text" id="edit-sambutan">
+
+            <label>ID Video YouTube (Misal: dQw4w9WgXcQ)</label>
+            <input type="text" id="edit-video">
+
+            <label>Link Google Sheets (Utama)</label>
+            <input type="text" id="edit-sheet">
+
+            <label>Link APP Canva</label>
+            <input type="text" id="edit-canva">
+
+            <label>Password Baru (Opsional)</label>
+            <input type="password" id="edit-pass" placeholder="Isi untuk ganti password">
+
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button onclick="saveConfig()" class="btn btn-sheet" style="flex: 2;">Simpan</button>
+                <button onclick="closeAdmin()" class="btn" style="background:#444; flex: 1; color: white;">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA MANAGEMENT ---
+        const defaultConfig = {
+            nama: "SD GLOBAL SMART",
+            tagline: "Luminous Ramadan: Terang dalam Kebaikan",
+            sambutan: "Mari jadikan Ramadan tahun ini lebih bermakna dengan pencatatan ibadah yang teratur melalui E-Jurnal.",
+            video: "dQw4w9WgXcQ",
+            sheet: "https://docs.google.com/spreadsheets/",
+            canva: "https://www.canva.com",
+            pass: "admin123"
+        };
+
+        let db = JSON.parse(localStorage.getItem('portalRamadanDB')) || defaultConfig;
+
+        function init() {
+            document.getElementById('display-judul').innerText = db.nama;
+            document.getElementById('display-tagline').innerText = db.tagline;
+            document.getElementById('display-sambutan').innerText = db.sambutan;
+            document.getElementById('display-video').src = `https://www.youtube.com/embed/${db.video}`;
+            document.getElementById('display-canva').href = db.canva;
+            document.getElementById('foot-nama').innerText = db.nama;
+            
+            // Isi form admin dengan data saat ini
+            document.getElementById('edit-nama').value = db.nama;
+            document.getElementById('edit-tagline').value = db.tagline;
+            document.getElementById('edit-sambutan').value = db.sambutan;
+            document.getElementById('edit-video').value = db.video;
+            document.getElementById('edit-sheet').value = db.sheet;
+            document.getElementById('edit-canva').value = db.canva;
+        }
+
+        // --- SISTEM ADMIN ---
+        function authAdmin() {
+            const input = prompt("Masukkan Password Admin:");
+            if(input === db.pass) {
+                document.getElementById('overlay').style.display = 'block';
+                document.getElementById('admin-panel').style.display = 'block';
+            } else if (input !== null) {
+                alert("Akses Ditolak!");
+            }
+        }
+
+        function closeAdmin() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'none';
+        }
+
+        function saveConfig() {
+            db.nama = document.getElementById('edit-nama').value;
+            db.tagline = document.getElementById('edit-tagline').value;
+            db.sambutan = document.getElementById('edit-sambutan').value;
+            db.video = document.getElementById('edit-video').value;
+            db.sheet = document.getElementById('edit-sheet').value;
+            db.canva = document.getElementById('edit-canva').value;
+            
+            const newPass = document.getElementById('edit-pass').value;
+            if(newPass.trim() !== "") db.pass = newPass;
+
+            localStorage.setItem('portalRamadanDB', JSON.stringify(db));
+            alert("Data Berhasil Diperbarui!");
+            location.reload();
+        }
+
+        // --- SISTEM JEMBATAN SHEET ---
+        function bukaSheet() {
+            const kls = document.getElementById('pilih-kelas').value;
+            if(!kls) return alert("Pilih kelas ananda terlebih dahulu!");
+            
+            // Anda bisa memodifikasi logika ini agar tiap kelas punya ID unik
+            // Contoh: window.open(db.sheet + "?tab=" + kls, '_blank');
+            window.open(db.sheet, '_blank');
+        }
+
+        init();
+    </script>
+</body>
+</html>
